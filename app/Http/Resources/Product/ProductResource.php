@@ -4,7 +4,7 @@ namespace App\Http\Resources\Product;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ProductResouce extends JsonResource
+class ProductResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -20,7 +20,14 @@ class ProductResouce extends JsonResource
             'description' => $this->description,
             'price' => $this->price,
             'discount' => $this->discount,
+            'actual_price' => round($this->price - ($this->price * $this->discount / 100), 2),
+            'stock' => $this->stock == 0 ? 'Product is out of Stock' : $this->stock,
+            'rating' => $this->reviews->count() > 0 ? round($this->reviews->avg('rating'), 2) : 'No rating yet',
             'image' => $this->image,
+            'href' => [
+                'link' => route('products.show', $this->id),
+                'reviews' => route('reviews.index', $this->id)
+            ]
         ];
     }
 }
