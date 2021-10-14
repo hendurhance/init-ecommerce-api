@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ReviewRequest;
+use App\Http\Requests\ReviewUpdate;
 use App\Http\Resources\ReviewResource;
 use App\Models\Product;
 use App\Models\Review;
@@ -11,6 +12,12 @@ use Illuminate\Http\Request;
 
 class ReviewController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth:api')->except('index', 'show');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -55,9 +62,15 @@ class ReviewController extends Controller
      * @param  \App\Models\Review  $review
      * @return \Illuminate\Http\Response
      */
-    public function show(Review $review)
+    public function show(Product $product, Review $review)
     {
-        //
+        if ($review->product_id == $product->id) {
+            return new ReviewResource($review);
+        }
+
+        return response()->json([
+            'error' => 'Review does not belong to product'
+        ], Response::HTTP_UNAUTHORIZED);
     }
 
     /**
@@ -78,9 +91,14 @@ class ReviewController extends Controller
      * @param  \App\Models\Review  $review
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Review $review)
+    public function update(ReviewUpdate $request, Product $product, Review $review)
     {
         //
+        $review->update($request->all());
+
+        return response([
+            'data' => new ReviewResource($review)
+        ], Response::HTTP_CREATED);
     }
 
     /**
@@ -89,8 +107,17 @@ class ReviewController extends Controller
      * @param  \App\Models\Review  $review
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Review $review)
+    public function destroy(Product $product, Review $review)
     {
         //
+        // check if the review belongs to the product
+        if ($review->product_id == $product->id) {
+            $review->delete();
+            return response(null, Response::HTTP_NO_CONTENT);
+        }
+
+        return response()->json([
+            'error' => 'Review does not belong to product'
+        ], Response::HTTP_UNAUTHORIZED);
     }
 }
