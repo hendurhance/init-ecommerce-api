@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\ProductNotBelongToUser;
 use App\Http\Resources\Product\ProductCollection;
 use App\Http\Resources\Product\ProductResource;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Http\Requests\ProductRequest;
 use Symfony\Component\HttpFoundation\Response;
+use App\Http\Requests\ProductUpdate;
 
 class ProductController extends Controller
 {
@@ -47,6 +49,7 @@ class ProductController extends Controller
     public function store(ProductRequest $request)
     {
         $product = new Product;
+        $product->user_id = auth()->user()->id;
         $product->name = $request->name;
         $product->title = $request->title;
         $product->description = $request->description;
@@ -96,8 +99,19 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        //
-       
+        // check if user is authorized to update product
+        $this->ProductUserCheck($product);
+
+        $this->validate($request, [
+            'name' => 'min:3|max:255|unique:products',
+            'title' => 'min:3|max:255',
+            'description' => 'min:3|max:255',
+            'price' => 'numeric|max:1000',
+            'stock' => 'numeric|max:9',
+            'discount' => 'numeric|max:30',
+            'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
         $product->update($request->all());
         return response([
             'data' => new ProductResource($product)
@@ -112,8 +126,29 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        //
+        // check if user is authorized to delete product
+        $this->ProductUserCheck($product);
         $product->delete();
         return response(null, Response::HTTP_NO_CONTENT);
+    }
+
+    public function search(Request $request)
+    {
+        $request->validate([
+            'q' => 'required|string|max:50'
+        ]);
+        $q = $request->q;
+        $products = Product::where('name', 'LIKE', "%$q%")
+            ->orWhere('title', 'LIKE', "%$q%")
+            ->paginate(30);
+        return ProductCollection::collection($products);
+    }
+
+    public function ProductUserCheck($product)
+    {
+        // id user is not the same as id user of product
+        if (auth()->user()->id !== $product->user_id) {
+            throw new ProductNotBelongToUser;
+        }
     }
 }

@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Product;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class ProductFactory extends Factory
@@ -22,6 +23,8 @@ class ProductFactory extends Factory
     public function definition()
     {
         return [
+            // user id random id from 1 to 5
+            'user_id' => $this->faker->randomElement(User::pluck('id')->toArray()),
             // name of the product
             'name' => $this->faker->word,
             // title of the product

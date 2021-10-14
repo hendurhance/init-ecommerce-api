@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 
-class ReviewSeeder extends Seeder
+class UserSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -13,7 +13,7 @@ class ReviewSeeder extends Seeder
      */
     public function run()
     {
-        // create reviews 500 times
-        \App\Models\Review::factory(150)->create();
+        //
+        \App\Models\User::factory(5)->create();
     }
 }
