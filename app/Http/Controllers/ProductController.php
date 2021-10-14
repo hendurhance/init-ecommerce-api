@@ -97,20 +97,10 @@ class ProductController extends Controller
      * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Product $product)
+    public function update(ProductUpdate $request, Product $product)
     {
         // check if user is authorized to update product
         $this->ProductUserCheck($product);
-
-        $this->validate($request, [
-            'name' => 'min:3|max:255|unique:products',
-            'title' => 'min:3|max:255',
-            'description' => 'min:3|max:255',
-            'price' => 'numeric|max:1000',
-            'stock' => 'numeric|max:9',
-            'discount' => 'numeric|max:30',
-            'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        ]);
 
         $product->update($request->all());
         return response([

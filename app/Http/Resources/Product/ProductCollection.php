@@ -22,7 +22,8 @@ class ProductCollection extends JsonResource
             'href' => [
                 'link' => route('products.show', $this->id),
                 'reviews' => route('reviews.index', $this->id)
-            ]
+            ],
+            'categories' => $this->categories->count() > 0 ? $this->categories : 'No categories yet'
         ];
     }
 }

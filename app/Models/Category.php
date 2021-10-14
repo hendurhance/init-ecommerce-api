@@ -20,5 +20,11 @@ class Category extends Model
     {
         return $this->hasMany(Category::class, 'parent_id');
     }
+
+    // category is linked in ProductCategory
+    public function products()
+    {
+        return $this->hasMany(ProductCategory::class, 'category_id');
+    }
     
 }

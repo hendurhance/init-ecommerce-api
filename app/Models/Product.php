@@ -10,6 +10,8 @@ class Product extends Model
 {
     use HasFactory;
 
+    protected $table = 'products';
+
     protected $fillable = [
         'name',
         'title', 
@@ -23,5 +25,16 @@ class Product extends Model
     public function reviews()
     {
         return $this->hasMany(Review::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    // get all categories on the product
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class, 'product_categories')->withPivot('product_id', 'category_id');
     }
 }
