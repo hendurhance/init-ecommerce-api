@@ -34,8 +34,17 @@ Route::prefix('products')->group(function () {
 
 /* ======== CATEGORIES ======= */
 Route::prefix('categories')->group(function () {
-    Route::get('/', [CategoryController::class, 'index'])->name('categories.all');
+    // get endpoint
+    Route::get('/', [CategoryController::class, 'index'])->name('categories.index');
     Route::get('/{category}', [CategoryController::class, 'getCategory'])->name('categories.show');
     Route::get('/{category}/subcategories', [CategoryController::class, 'getSubCategories'])->name('categories.subcategories');
     Route::get('/{category}/subcategories/{subcategories}', [CategoryController::class, 'getSubCategoriesIndex'])->name('categories.sub.index');
+    // post endpoint
+    Route::post('/', [CategoryController::class, 'store'])->name('categories.store');
+    // put/patch endpoint
+    Route::put('/{category}', [CategoryController::class, 'update'])->name('categories.update');
+    Route::patch('/{category}', [CategoryController::class, 'update'])->name('categories.update');
+    // put/patch subcategories endpoint
+    Route::put('/{category}/subcategories/{subcategories}', [CategoryController::class, 'updateSubCategories'])->name('categories.sub.update');
+    Route::patch('/{category}/subcategories/{subcategories}', [CategoryController::class, 'updateSubCategories'])->name('categories.sub.update');
 });
