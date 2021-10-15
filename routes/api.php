@@ -47,4 +47,8 @@ Route::prefix('categories')->group(function () {
     // put/patch subcategories endpoint
     Route::put('/{category}/subcategories/{subcategories}', [CategoryController::class, 'updateSubCategories'])->name('categories.sub.update');
     Route::patch('/{category}/subcategories/{subcategories}', [CategoryController::class, 'updateSubCategories'])->name('categories.sub.update');
+    // delete endpoint
+    Route::delete('/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
+    // delete subcategories endpoint
+    Route::delete('/{category}/subcategories/{subcategories}', [CategoryController::class, 'destroySubCategories'])->name('categories.sub.destroy');
 });

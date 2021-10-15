@@ -16,6 +16,7 @@ class CategoryResource extends JsonResource
     {
         if ($this->resource->parent_id == null) {
             return [
+                'id' => $this->id,
                 'name' => $this->name,
                 'slug' => $this->slug,
                 'image' => $this->image,

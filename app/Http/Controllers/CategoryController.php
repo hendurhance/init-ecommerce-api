@@ -138,4 +138,38 @@ class CategoryController extends Controller
             throw new SubCategoryNotParentsChild;
         }
     }
+
+    public function destroy(Category $category)
+    {
+        // check if category is parent category
+        if(Category::find($category->id)->parent_id == null)
+        {
+            $category->delete();
+            return response()->json([
+                null
+            ], Response::HTTP_NO_CONTENT);
+        }
+        else
+        {
+            throw new CategoryNotParent;
+        }
+    }
+
+    public function destroySubCategories(Category $category, $id)
+    {
+        // check if id is a sub category of category
+        
+        if(in_array($id, $category->children->pluck('id')->toArray()))
+        {
+            $subCategory = Category::find($id);
+            $subCategory->delete();
+            return response()->json([
+                null
+            ], Response::HTTP_NO_CONTENT);
+        }
+        else
+        {
+            throw new SubCategoryNotParentsChild;
+        }
+    }
 }
