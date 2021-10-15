@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Resources\Product;
-
+use App\Helper\Helper;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ProductResource extends JsonResource
@@ -26,7 +26,8 @@ class ProductResource extends JsonResource
             'image' => $this->image,
             'href' => [
                 'reviews' => route('reviews.index', $this->id)
-            ]
+            ],
+            'categories' => $this->categories->count() > 0 ? Helper::getCategory($this->categories) : 'No categories yet'
         ];
     }
 }

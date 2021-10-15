@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Product;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Helper\Helper;
 class ProductCollection extends JsonResource
 {
     /**
@@ -23,7 +24,7 @@ class ProductCollection extends JsonResource
                 'link' => route('products.show', $this->id),
                 'reviews' => route('reviews.index', $this->id)
             ],
-            'categories' => $this->categories->count() > 0 ? $this->categories : 'No categories yet'
+            'categories' => $this->categories->count() > 0 ? Helper::getCategory($this->categories) : 'No categories yet'
         ];
     }
 }
