@@ -51,4 +51,6 @@ Route::prefix('categories')->group(function () {
     Route::delete('/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
     // delete subcategories endpoint
     Route::delete('/{category}/subcategories/{subcategories}', [CategoryController::class, 'destroySubCategories'])->name('categories.sub.destroy');
+    // get products in a category endpoint
+    Route::get('/{category}/products', [CategoryController::class, 'getProducts'])->name('categories.products');
 });
