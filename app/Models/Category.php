@@ -33,5 +33,4 @@ class Category extends Model
     {
         return $this->hasMany(ProductCategory::class, 'category_id');
     }
-    
 }

@@ -11,7 +11,7 @@ use App\Http\Requests\CategoryRequest;
 use App\Exceptions\ParentCategoryNotExist;
 use App\Exceptions\SubCategoryNotParentsChild;
 use App\Http\Requests\CategoryUpdate;
-
+use App\Http\Resources\ProductCategoryResource;
 class CategoryController extends Controller
 {
     //
@@ -24,7 +24,8 @@ class CategoryController extends Controller
                 'getCategories', 
                 'getParentCategories', 
                 'getSubCategories', 
-                'getSubCategoriesIndex'
+                'getSubCategoriesIndex',
+                'getProducts'
             ]
         );
     }
@@ -171,5 +172,21 @@ class CategoryController extends Controller
         {
             throw new SubCategoryNotParentsChild;
         }
+    }
+
+    //get products of category
+    public function getProducts(Category $category)
+    {
+        // if category is parent category
+        if($category->parent_id == null)
+        {
+            // return all products of children categories
+            return ProductCategoryResource::collection($category->children->pluck('products')->flatten());
+        }
+        else
+        {
+            return ProductCategoryResource::collection($category->products);
+        }
+        
     }
 }
